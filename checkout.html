@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Checkout — Phoenix Thozha Gifts</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap nav">
+      <a class="logo" href="index.html"><img class="logo-mark" src="images/phoenix-logo.jpg" alt="Phoenix Thozha" /><span class="logo-text">Phoenix Thozha<em>Gifts</em></span></a>
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="shop.html">Shop</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a class="cart-link" href="cart.html">Cart <span class="badge" data-cart-count hidden>0</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap section" id="checkout-root"></main>
+
+  <footer class="site-footer">
+    <div class="wrap"><p>Phoenix Thozha Gifts · Veedur, Villupuram · +91 86675 17337</p></div>
+  </footer>
+
+  <script src="js/products.js"></script>
+  <script src="js/cart.js"></script>
+  <script>
+    const root = document.getElementById("checkout-root");
+    const items = readCart();
+
+    if (new URLSearchParams(location.search).get("done") === "1") {
+      root.innerHTML = `<div class="success">
+        <p class="kicker">Order placed</p>
+        <h1>We’ll start making it.</h1>
+        <p class="muted">We will call or WhatsApp you on +91 86675 17337 if we need the photo. Pay on delivery or send UPI when we confirm.</p>
+        <a class="btn btn-primary" href="shop.html">Shop another gift</a>
+      </div>`;
+    } else if (!items.length) {
+      root.innerHTML = `<div class="empty"><h2>Nothing to check out</h2><a class="btn btn-primary" href="shop.html">Shop gifts</a></div>`;
+    } else {
+      root.innerHTML = `
+        <div class="split">
+          <form class="form" id="order-form">
+            <p class="kicker">Checkout</p>
+            <h1>Where should it go?</h1>
+            <label>Full name<input name="name" required /></label>
+            <label>Phone<input name="phone" type="tel" required placeholder="10-digit mobile" /></label>
+            <label>Email<input name="email" type="email" required /></label>
+            <label>Address<textarea name="address" rows="3" required></textarea></label>
+            <label>City<input name="city" required /></label>
+            <label>PIN code<input name="pin" required pattern="[0-9]{6}" /></label>
+            <label>Payment
+              <select name="pay">
+                <option>Cash on delivery</option>
+                <option>UPI on confirmation</option>
+              </select>
+            </label>
+            <button class="btn btn-primary" type="submit">Place order · ${formatPrice(cartTotal())}</button>
+          </form>
+          <aside class="summary">
+            <h2>Your gifts</h2>
+            ${items.map((i) => `<p class="row-between"><span>${i.name} × ${i.qty}</span><span>${formatPrice(i.price * i.qty)}</span></p>`).join("")}
+            <p class="row-between"><strong>Total</strong><strong>${formatPrice(cartTotal())}</strong></p>
+          </aside>
+        </div>`;
+
+      document.getElementById("order-form").onsubmit = (e) => {
+        e.preventDefault();
+        const customer = Object.fromEntries(new FormData(e.target));
+        const order = {
+          id: "KS-" + Date.now().toString().slice(-6),
+          at: new Date().toISOString(),
+          customer,
+          items,
+          total: cartTotal(),
+        };
+        
+        // Format order message for WhatsApp
+        const itemList = items.map((i) => `• ${i.name} × ${i.qty} = ₹${i.price * i.qty}`).join("\n");
+        const orderMessage = `*NEW ORDER*%0A%0A*Order ID:* ${order.id}%0A*Name:* ${customer.name}%0A*Phone:* ${customer.phone}%0A*Email:* ${customer.email}%0A*Address:* ${customer.address}, ${customer.city} - ${customer.pin}%0A*Payment:* ${customer.pay}%0A%0A*Items:*%0A${itemList.replace(/\n/g, '%0A')}%0A%0A*Total:* ₹${cartTotal()}`;
+        
+        // Save order locally
+        localStorage.setItem("phoenix-thozha-last-order", JSON.stringify(order));
+        clearCart();
+        
+        // Open WhatsApp first
+        window.open(`https://wa.me/918667517337?text=${orderMessage}`, '_blank');
+        
+        // Then show success page
+        setTimeout(() => {
+          location.href = "checkout.html?done=1";
+        }, 1000);
+      };
+    }
+  </script>
+</body>
+</html>

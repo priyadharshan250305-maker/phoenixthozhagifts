@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Shop — Phoenix Thozha Gifts</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap nav">
+      <a class="logo" href="index.html"><img class="logo-mark" src="images/phoenix-logo.jpg" alt="Phoenix Thozha" /><span class="logo-text">Phoenix Thozha<em>Gifts</em></span></a>
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a class="active" href="shop.html">Shop</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a class="cart-link" href="cart.html">Cart <span class="badge" data-cart-count hidden>0</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="page-hero">
+      <p class="kicker">Catalog</p>
+      <h1>Every gift, made to order.</h1>
+      <p class="lede">Pick a piece, add a name or photo, and we’ll make it. Prices include printing or engraving.</p>
+    </div>
+    <div class="filters" id="filters"></div>
+    <div class="grid" id="shop-grid"></div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap"><p>Phoenix Thozha Gifts · Veedur, Villupuram · +91 86675 17337</p></div>
+  </footer>
+
+  <script src="js/products.js"></script>
+  <script src="js/cart.js"></script>
+  <script>
+    const grid = document.getElementById("shop-grid");
+    const filters = document.getElementById("filters");
+    let current = "All";
+
+    function render() {
+      const list = current === "All" ? PRODUCTS : PRODUCTS.filter((p) => p.category === current);
+      grid.innerHTML = list.map(productCard).join("");
+    }
+
+    getCategories().forEach((cat) => {
+      const btn = document.createElement("button");
+      btn.className = "chip" + (cat === "All" ? " active" : "");
+      btn.textContent = cat;
+      btn.onclick = () => {
+        current = cat;
+        document.querySelectorAll(".chip").forEach((c) => c.classList.remove("active"));
+        btn.classList.add("active");
+        render();
+      };
+      filters.appendChild(btn);
+    });
+
+    render();
+  </script>
+</body>
+</html>

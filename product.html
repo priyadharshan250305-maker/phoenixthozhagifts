@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Product — Phoenix Thozha Gifts</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap nav">
+      <a class="logo" href="index.html"><img class="logo-mark" src="images/phoenix-logo.jpg" alt="Phoenix Thozha" /><span class="logo-text">Phoenix Thozha<em>Gifts</em></span></a>
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a class="active" href="shop.html">Shop</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a class="cart-link" href="cart.html">Cart <span class="badge" data-cart-count hidden>0</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap section split" id="product-root"></main>
+
+  <footer class="site-footer">
+    <div class="wrap"><p>Phoenix Thozha Gifts · Veedur, Villupuram · +91 86675 17337</p></div>
+  </footer>
+
+  <script src="js/products.js"></script>
+  <script src="js/cart.js"></script>
+  <script>
+    const id = new URLSearchParams(location.search).get("id");
+    const p = getProduct(id);
+    const root = document.getElementById("product-root");
+
+    if (!p) {
+      root.innerHTML = `<div class="empty"><h2>Gift not found</h2><p><a class="btn btn-primary" href="shop.html">Back to shop</a></p></div>`;
+    } else {
+      document.title = p.name + " — Phoenix Thozha Gifts";
+      const extra = [];
+      if (p.options.includes("name")) {
+        extra.push(`<label>Name / initials<input name="customName" maxlength="24" placeholder="e.g. Aanya" required /></label>`);
+      }
+      if (p.options.includes("message")) {
+        extra.push(`<label>Message<textarea name="message" rows="3" maxlength="120" placeholder="A short line for the card or print"></textarea></label>`);
+      }
+      if (p.options.includes("photoNote")) {
+        extra.push(`<label>Photo note<input name="photoNote" placeholder="WhatsApp the photo after you order — mention this note" /></label>`);
+      }
+      if (p.options.includes("size")) {
+        extra.push(`<label>Size<select name="size">${p.sizes.map((s) => `<option>${s}</option>`).join("")}</select></label>`);
+      }
+
+      root.innerHTML = `
+        <div class="product-photo"><img src="${p.image}" alt="${p.name}" /></div>
+        <div>
+          <p class="kicker">${p.category}${p.tag ? " · " + p.tag : ""}</p>
+          <h1>${p.name}</h1>
+          <p class="price" style="font-size:1.4rem">${formatPrice(p.price)}</p>
+          <p class="muted">${p.description}</p>
+          <form class="form" id="buy-form">
+            <label>Colour
+              <select name="color">${p.colors.map((c) => `<option>${c}</option>`).join("")}</select>
+            </label>
+            ${extra.join("")}
+            <label>Quantity
+              <div class="qty">
+                <button type="button" id="minus">−</button>
+                <strong id="qty">1</strong>
+                <button type="button" id="plus">+</button>
+              </div>
+            </label>
+            <button class="btn btn-primary" type="submit">Add to cart</button>
+          </form>
+        </div>`;
+
+      let qty = 1;
+      document.getElementById("minus").onclick = () => {
+        qty = Math.max(1, qty - 1);
+        document.getElementById("qty").textContent = qty;
+      };
+      document.getElementById("plus").onclick = () => {
+        qty += 1;
+        document.getElementById("qty").textContent = qty;
+      };
+
+      document.getElementById("buy-form").onsubmit = (e) => {
+        e.preventDefault();
+        const data = Object.fromEntries(new FormData(e.target));
+        addToCart({
+          id: p.id,
+          name: p.name,
+          price: p.price,
+          image: p.image,
+          qty,
+          color: data.color,
+          size: data.size || "",
+          customName: data.customName || "",
+          message: data.message || "",
+          photoNote: data.photoNote || "",
+        });
+        showToast("Added to cart");
+      };
+    }
+  </script>
+</body>
+</html>

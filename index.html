@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Phoenix Thozha Gifts — Custom gifts </title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap nav">
+      <a class="logo" href="index.html"><img class="logo-mark" src="images/phoenix-logo.jpg" alt="Phoenix Thozha" /><span class="logo-text">Phoenix Thozha<em>Gifts</em></span></a>
+      <nav class="nav-links">
+        <a class="active" href="index.html">Home</a>
+        <a href="shop.html">Shop</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a class="cart-link" href="cart.html">Cart <span class="badge" data-cart-count hidden>0</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="wrap hero">
+      <div>
+        <p class="kicker">Phoenix Thozha Gifts</p>
+        <h1>Custom gifts</h1>
+        <p class="lede">T-shirts, mugs, keychains, bottles, caps, and photo frames — printed or engraved with a name, photo, or a line only they would understand.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="shop.html">Shop gifts</a>
+          <a class="btn btn-ghost" href="about.html">How ordering works</a>
+        </div>
+      </div>
+      <div class="hero-card">
+        <img src="images/hero.jpg" alt="Wrapped gifts from Phoenix Thozha Gifts" />
+      </div>
+    </section>
+
+    <section class="wrap section">
+      <div class="section-head">
+        <div>
+          <p class="kicker">Bestsellers</p>
+          <h2>Six gifts. Fully custom.</h2>
+        </div>
+        <a class="btn btn-ghost" href="shop.html">See all</a>
+      </div>
+      <div class="grid" id="home-grid"></div>
+    </section>
+
+    <section class="wrap section">
+      <p class="kicker">Occasions</p>
+      <h2>For the days that need more than a card.</h2>
+      <div class="occassions">
+        <article class="occ">
+          <h3>Birthdays</h3>
+          <p class="muted">Custom tshirts, mugs, and caps with a name or photo they’ll actually use.</p>
+        </article>
+        <article class="occ">
+          <h3>Anniversaries</h3>
+          <p class="muted">Photo frames and printed bottles that feel personal, not generic.</p>
+        </article>
+        <article class="occ">
+          <h3>Work & thanks</h3>
+          <p class="muted">Keychains and bottles that feel personal without being loud.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-grid">
+      <div>
+        <strong class="logo"><img class="logo-mark" src="images/phoenix-logo.jpg" alt="Phoenix Thozha" /><span class="logo-text">Phoenix Thozha<em>Gifts</em></span></strong>
+        <p>Custom t-shirts, mugs, keychains, bottles, caps, and photo frames from Veedur village, Villupuram.</p>
+      </div>
+      <div>
+        <strong>Shop</strong>
+        <p><a href="shop.html">All gifts</a></p>
+        <p><a href="cart.html">Cart</a></p>
+      </div>
+      <div>
+        <strong>Contact</strong>
+        <p><a href="tel:+918667517337">+91 86675 17337</a></p>
+        <p><a href="mailto:phoenxithozhagifts250305@gmail.com">phoenxithozhagifts250305@gmail.com</a></p>
+        <p>Veedur village, Villupuram district,<br />Tamil Nadu 605652</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/products.js"></script>
+  <script src="js/cart.js"></script>
+  <script>
+    const grid = document.getElementById("home-grid");
+    grid.innerHTML = PRODUCTS.map(productCard).join("");
+  </script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cart — Phoenix Thozha Gifts</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap nav">
+      <a class="logo" href="index.html"><img class="logo-mark" src="images/phoenix-logo.jpg" alt="Phoenix Thozha" /><span class="logo-text">Phoenix Thozha<em>Gifts</em></span></a>
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="shop.html">Shop</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a class="cart-link" href="cart.html">Cart <span class="badge" data-cart-count hidden>0</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap section split" id="cart-root"></main>
+
+  <footer class="site-footer">
+    <div class="wrap"><p>Phoenix Thozha Gifts · Veedur, Villupuram · +91 86675 17337</p></div>
+  </footer>
+
+  <script src="js/products.js"></script>
+  <script src="js/cart.js"></script>
+  <script>
+    function renderCart() {
+      const root = document.getElementById("cart-root");
+      const items = readCart();
+      if (!items.length) {
+        root.innerHTML = `<div class="empty" style="grid-column:1/-1">
+          <h2>Your cart is empty</h2>
+          <p class="muted">Pick a gift and add a name or photo.</p>
+          <a class="btn btn-primary" href="shop.html">Browse gifts</a>
+        </div>`;
+        return;
+      }
+
+      root.innerHTML = `
+        <div class="cart-table">
+          ${items.map((item) => `
+            <article class="cart-row">
+              <img src="${item.image}" alt="${item.name}" />
+              <div>
+                <strong>${item.name}</strong>
+                <div class="muted">${item.color}${item.size ? " · " + item.size : ""}${item.customName ? " · “" + item.customName + "”" : ""}</div>
+                <button class="btn btn-ghost" data-remove="${item.lineId}" style="margin-top:8px;padding:6px 12px">Remove</button>
+              </div>
+              <div class="qty">
+                <button data-qty="${item.lineId}" data-d="-1">−</button>
+                <span>${item.qty}</span>
+                <button data-qty="${item.lineId}" data-d="1">+</button>
+              </div>
+              <strong>${formatPrice(item.price * item.qty)}</strong>
+            </article>
+          `).join("")}
+        </div>
+        <aside class="summary">
+          <h2>Summary</h2>
+          <p class="row-between"><span>Items</span><span>${cartCount()}</span></p>
+          <p class="row-between"><span>Shipping</span><span>Free over ₹499</span></p>
+          <p class="row-between"><strong>Total</strong><strong>${formatPrice(cartTotal())}</strong></p>
+          <a class="btn btn-primary" href="checkout.html" style="width:100%;margin-top:8px">Checkout</a>
+        </aside>`;
+
+      root.querySelectorAll("[data-remove]").forEach((btn) => {
+        btn.onclick = () => { removeLine(btn.dataset.remove); renderCart(); };
+      });
+      root.querySelectorAll("[data-qty]").forEach((btn) => {
+        btn.onclick = () => {
+          const item = readCart().find((c) => c.lineId === btn.dataset.qty);
+          if (!item) return;
+          updateQty(item.lineId, item.qty + Number(btn.dataset.d));
+          renderCart();
+        };
+      });
+    }
+
+    renderCart();
+  </script>
+</body>
+</html>
