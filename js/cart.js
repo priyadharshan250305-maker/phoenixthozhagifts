@@ -83,6 +83,40 @@ function showToast(text) {
 
 document.addEventListener("DOMContentLoaded", () => {
   updateCartCount();
+
+  document.querySelectorAll(".nav").forEach((navWrap) => {
+    const menu = navWrap.querySelector(".nav-links");
+    if (!menu) return;
+
+    const toggle = document.createElement("button");
+    toggle.type = "button";
+    toggle.className = "nav-toggle";
+    toggle.setAttribute("aria-label", "Toggle menu");
+    toggle.setAttribute("aria-expanded", "false");
+    toggle.innerHTML = '<span></span><span></span><span></span>';
+    navWrap.insertBefore(toggle, menu);
+
+    const closeMenu = () => {
+      menu.classList.remove("is-open");
+      toggle.setAttribute("aria-expanded", "false");
+    };
+
+    toggle.addEventListener("click", () => {
+      const isOpen = menu.classList.toggle("is-open");
+      toggle.setAttribute("aria-expanded", String(isOpen));
+    });
+
+    menu.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", closeMenu);
+    });
+
+    document.addEventListener("click", (event) => {
+      if (!navWrap.contains(event.target)) {
+        closeMenu();
+      }
+    });
+  });
+
   document.body.addEventListener("click", (e) => {
     const btn = e.target.closest(".btn, .chip, .qty button");
     if (!btn) return;

@@ -1,14 +1,16 @@
-const PRODUCTS = [
+const PRODUCT_STORAGE_KEY = "phoenix-thozha-products-v1";
+
+const DEFAULT_PRODUCTS = [
   {
-    id: "tee",
-    name: "Custom T-shirt",
+    id: "tshirt",
+    name: "Instant T-Shirt",
     category: "Apparel",
     price: 450,
     tag: "Bestseller",
-    blurb: "Soft cotton tee with a name, date, or short quote.",
+    blurb: "Soft cotton tshirt with a name, date, or short quote.",
     description:
       "240 GSM 100% pure cotton, unisex fit. We print your name, photo, or quote on the chest. Pre-shrunk and made to wash well.",
-    colors: ["White", "Black", "Navy blue", "Red","Grey"],
+    colors: ["White", "Black", "Navy blue", "Red", "Grey"],
     options: ["name", "message", "size", "photoNote"],
     sizes: ["S", "M", "L", "XL"],
     image: "images/tshirt.jpg",
@@ -22,12 +24,12 @@ const PRODUCTS = [
     blurb: "Ceramic mug with a photo, name, or a line of text.",
     description:
       "350 ml glossy ceramic mug with wrap-around print. Dishwasher-safe. Perfect for birthdays, offices, and morning chai.",
-    colors: ["White", ],
+    colors: ["White"],
     options: ["name", "message", "photoNote"],
     image: "images/mug.jpg",
   },
-    {
-    id: "Magic mug",
+  {
+    id: "magic-mug",
     name: "Custom Magic Mug",
     category: "Drinkware",
     price: 399,
@@ -35,7 +37,7 @@ const PRODUCTS = [
     blurb: "Ceramic mug with a photo, name, or a line of text.",
     description:
       "350 ml glossy ceramic mug with wrap-around print. Dishwasher-safe. Perfect for birthdays, offices, and morning chai.",
-    colors: ["Black", ],
+    colors: ["Black"],
     options: ["name", "message", "photoNote"],
     image: "images/magicmug.jpg",
   },
@@ -46,8 +48,7 @@ const PRODUCTS = [
     price: 99,
     tag: "Under ₹300",
     blurb: "Engraved keychain with initials, a name, or a date.",
-    description:
-      "sublimation keychain — easy to gift.",
+    description: "sublimation keychain — easy to gift.",
     colors: ["Natural wood", "Dark wood"],
     options: ["name"],
     image: "images/keychain.jpg",
@@ -93,7 +94,66 @@ const PRODUCTS = [
     options: ["name", "message", "photoNote", "size"],
     image: "images/frame.jpg",
   },
+  {
+    id: "phone-stand",
+    name: "Custom Phone Stand",
+    category: "Home",
+    price: 299,
+    tag: "New",
+    blurb: "Desk stand with a name, initial, or a short note.",
+    description:
+      "Wooden phone stand with a custom engraving. A useful desk decor piece for birthdays, work desks, and gifting moments.",
+    colors: ["Walnut", "Oak", "Black"],
+    options: ["name", "message"],
+    image: "images/frame.jpg",
+  },
+  {
+    id: "notebook",
+    name: "Custom Notebook",
+    category: "Stationery",
+    price: 249,
+    tag: "Giftable",
+    blurb: "Hardcover journal with initials or a special message.",
+    description:
+      "A premium diary for daily notes, goals, and memories. Add a name, initials, or a personal line for a memorable gift.",
+    colors: ["Beige", "Navy", "Forest"],
+    options: ["name", "message"],
+    image: "images/mug.jpg",
+  },
+  {
+    id: "badge",
+    name: "Custom Name Badge",
+    category: "Accessories",
+    price: 140,
+    tag: "Best value",
+    blurb: "Personalised badge for office, students, or events.",
+    description:
+      "Metal or acrylic badge with name and title. Great for offices, schools, family events, and team gifting.",
+    colors: ["Gold", "Silver", "Black"],
+    options: ["name", "message"],
+    image: "images/keychain.jpg",
+  },
 ];
+
+function getProducts() {
+  try {
+    const stored = JSON.parse(localStorage.getItem(PRODUCT_STORAGE_KEY) || "null");
+    if (Array.isArray(stored) && stored.length) {
+      return stored;
+    }
+  } catch {
+    // ignore invalid storage data and fall back to defaults
+  }
+
+  localStorage.setItem(PRODUCT_STORAGE_KEY, JSON.stringify(DEFAULT_PRODUCTS));
+  return DEFAULT_PRODUCTS;
+}
+
+function saveProducts(products) {
+  localStorage.setItem(PRODUCT_STORAGE_KEY, JSON.stringify(products));
+}
+
+const PRODUCTS = getProducts();
 
 function formatPrice(n) {
   return "₹" + n.toLocaleString("en-IN");
