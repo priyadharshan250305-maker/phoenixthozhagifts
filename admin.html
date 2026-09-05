@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
   <title>Admin — Phoenix Thozha Gifts</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -25,20 +26,10 @@
   </header>
 
   <main class="wrap section">
-    <div id="admin-lock" style="max-width:420px; margin:40px auto 0;">
-      <p class="kicker">Admin</p>
-      <h1>Enter password</h1>
-      <form class="form" id="admin-login-form">
-        <label>Password<input type="password" id="admin-password" required placeholder="Enter admin password" /></label>
-        <button class="btn btn-primary" type="submit">Unlock admin</button>
-        <p class="muted" id="login-error"></p>
-      </form>
-    </div>
-
-    <div id="admin-content" style="display:none;">
+    <div id="admin-content">
       <p class="kicker">Admin</p>
       <h1>Manage products</h1>
-      <p class="muted">Only add and delete product actions are allowed here.</p>
+      <p class="muted">This management page is for the site owner only and is not indexed for public search.</p>
       <div class="split" style="align-items:start">
         <form class="form" id="product-form">
           <label>Product name<input name="name" required /></label>
@@ -67,13 +58,8 @@
   <script src="js/products.js"></script>
   <script src="js/cart.js"></script>
   <script>
-    const ADMIN_PASSWORD = "Pri250305@";
     const list = document.getElementById("admin-list");
     const form = document.getElementById("product-form");
-    const lockView = document.getElementById("admin-lock");
-    const contentView = document.getElementById("admin-content");
-    const loginForm = document.getElementById("admin-login-form");
-    const loginError = document.getElementById("login-error");
     const imageFileInput = document.getElementById("image-file");
 
     function readFileAsDataUrl(file) {
@@ -83,12 +69,6 @@
         reader.onerror = () => reject(new Error("Could not read file"));
         reader.readAsDataURL(file);
       });
-    }
-
-    function unlockAdmin() {
-      lockView.style.display = "none";
-      contentView.style.display = "block";
-      renderAdminList();
     }
 
     function renderAdminList() {
@@ -112,17 +92,7 @@
       });
     }
 
-    loginForm.onsubmit = (e) => {
-      e.preventDefault();
-      const password = document.getElementById("admin-password").value;
-
-      if (password === ADMIN_PASSWORD) {
-        loginError.textContent = "";
-        unlockAdmin();
-      } else {
-        loginError.textContent = "Incorrect password";
-      }
-    };
+    renderAdminList();
 
     form.onsubmit = async (e) => {
       e.preventDefault();
